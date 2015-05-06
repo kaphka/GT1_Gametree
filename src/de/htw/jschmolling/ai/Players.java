@@ -26,9 +26,10 @@ public enum Players {
 	SOUTH(2),
 	WEST(3);
 	
+	public static int NEUTRAL = 4;
 	
 	//       {0,-1}
-	// {-1,0}      {1,0}
+	// {-1,0}      {1,0}[
 	//       {0, 1}
 	static public int[] DIR_MOVE_N = { 0,-1};
 	static public int[] DIR_MOVE_E = { 1, 0};
