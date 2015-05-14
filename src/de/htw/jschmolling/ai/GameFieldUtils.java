@@ -64,7 +64,7 @@ public class GameFieldUtils {
 	}
 	
 	static public boolean isSet(long field, int pos) {
-		if ((field & (1l << pos)) > 0) {
+		if ((field & (1l << pos)) != 0) {
 			return true;
 		}else{
 			return false;
