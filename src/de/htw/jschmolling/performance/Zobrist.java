@@ -4,6 +4,7 @@ import java.util.Random;
 
 import de.htw.jschmolling.ai.GameFieldUtils;
 import de.htw.jschmolling.ai.Players;
+import de.htw.jschmolling.ai.SMove;
 
 public class Zobrist {
 
@@ -33,6 +34,11 @@ public class Zobrist {
 		}
 		return hash;
 	}
+	
+	public static int rehash(int hash, int playerPos, int smove) {
+		return (hash ^ zobristTable[playerPos][SMove.from(smove)]) ^ zobristTable[playerPos][SMove.to(smove)];
+	}
+	
 	public static String print(int h) {
 		return Integer.toHexString(h);
 	}

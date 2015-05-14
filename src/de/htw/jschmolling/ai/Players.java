@@ -1,5 +1,8 @@
 package de.htw.jschmolling.ai;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*
  * Starting Positions:
  *  y
@@ -31,27 +34,28 @@ public enum Players {
 	//       {0,-1}
 	// {-1,0}      {1,0}[
 	//       {0, 1}
-	static public int[] DIR_MOVE_N = { 0,-1};
-	static public int[] DIR_MOVE_E = { 1, 0};
-	static public int[] DIR_MOVE_S = { 0, 1};
-	static public int[] DIR_MOVE_W = {-1, 0};
+	static public final int[] DIR_MOVE_N = { 0,-1};
+	static public final int[] DIR_MOVE_E = { -1, 0};
+	static public final int[] DIR_MOVE_S = { 0, 1};
+	static public final int[] DIR_MOVE_W = {1, 0};
 	
-	static public int[] DIR_STARTING_N = { 0,-1};
-	static public int[] DIR_STARTING_E = { 1, 0};
-	static public int[] DIR_STARTING_S = { 0, 1};
-	static public int[] DIR_STARTING_W = {-1, 0};
+	static public final int[] DIR_STARTING_N = { 0,-1};
+	static public final int[] DIR_STARTING_E = { 1, 0};
+	static public final int[] DIR_STARTING_S = { 0, 1};
+	static public final int[] DIR_STARTING_W = {-1, 0};
 	
-	static public int[] INIT_POSITION_N = { 0, 1};
-	static public int[] INIT_POSITION_E = { 1, 0};
-	static public int[] INIT_POSITION_S = { 0, 1};
-	static public int[] INIT_POSITION_W = {-1, 0};
+	static public final int[] INIT_POSITION_N = { 0, 1};
+	static public final int[] INIT_POSITION_E = { 1, 0};
+	static public final int[] INIT_POSITION_S = { 0, 1};
+	static public final int[] INIT_POSITION_W = {-1, 0};
 	
-	static public int[] NEUTRAL_DIRECTION = {0,0};
+	static public final int[] NEUTRAL_DIRECTION = {0,0};
 	
-	static public int[][] MOVING_DIRECTIONS = {DIR_MOVE_N,DIR_MOVE_E,DIR_MOVE_S,DIR_MOVE_W};
+	static public final int[][] dir = {DIR_MOVE_N,DIR_MOVE_E,DIR_MOVE_S,DIR_MOVE_W};
 	
 	
 	public final int pos;
+
 	
 	private Players( int pos){
 		this.pos = pos;
@@ -77,4 +81,5 @@ public enum Players {
 			return "Invalid";
 		}
 	}
+
 }

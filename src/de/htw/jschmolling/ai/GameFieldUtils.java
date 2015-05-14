@@ -5,6 +5,7 @@ import lenz.htw.kimpl.Move;
 
 public class GameFieldUtils {
 
+	public static final int EMPTY_POSITION = 64;
 	public final static int INT_NUMBER = 4;
 	public final static int NUMBER_OF_TOKENS = 6;
 	public final static int DIMENSION = 8;
@@ -129,19 +130,24 @@ public class GameFieldUtils {
 		int n = Long.bitCount(temp);
 		int i = -1;
 		int shift = 0;
-		System.out.println("get player position: ");
 		for (int c = 0; c < n; c++) {
 			shift = Long.numberOfTrailingZeros(temp) + 1;
 			i += shift;
-			System.out.println(DUtils.getFullLong(temp) + " i = " + i + " shift = " + shift);
+//			System.out.println(DUtils.getFullLong(temp) + " i = " + i + " shift = " + shift);
 			// example: Long.numberOfTrailingZeros(0x100) -> 2
 			buffer[c] = i;
 			temp = temp >> shift;			
 		}
 		for (int c = n; c < buffer.length; c++) {
-			buffer[c] = 64;
+			buffer[c] = EMPTY_POSITION;
 		}
 		return buffer;
+	}
+	public static boolean isEmptyPosition(long[] field, int sposition) {
+		return !isSet(field[0], sposition) &&
+			   !isSet(field[1], sposition) &&
+			   !isSet(field[2], sposition) &&
+			   !isSet(field[3], sposition);
 	}
 
 	
