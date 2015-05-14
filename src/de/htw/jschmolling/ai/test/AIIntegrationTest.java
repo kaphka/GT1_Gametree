@@ -1,5 +1,7 @@
 package de.htw.jschmolling.ai.test;
 
+import java.util.Arrays;
+
 import lenz.htw.kimpl.Move;
 
 import org.junit.Test;
@@ -54,20 +56,26 @@ public class AIIntegrationTest {
 	@Test
 	public void testZobrist() throws Exception {
 		long[] field = GameFieldUtils.getEmptyField();
+		GameFieldUtils.set(field, Players.NORTH.pos, 23);
+		GameFieldUtils.set(field, Players.SOUTH.pos, 2);
+		GameFieldUtils.set(field, Players.NORTH.pos, 32);
 		int hash = Zobrist.hash(field);
-//		System.out.println(hash);
+		System.out.println(Zobrist.print(hash));
 	}
 	
 	@Test
 	public void testGetPlayerPositions() throws Exception {
-		int [] playerPositions = { 0, 5, 8, 5, 63, 2};
+		int [] playerPositions = { 0, 2, 5, 7, 63, 64 };
 		long [] pfield = GameFieldUtils.getEmptyField();
-		for (int i = 0; i < playerPositions.length; i++) {
+		for (int i = 0; i < playerPositions.length - 1; i++) {
 			GameFieldUtils.set(pfield, Players.SOUTH.pos, playerPositions[i]);
 		}
 		
+		System.out.println(DUtils.getFullLong(pfield[Players.SOUTH.pos]));
+		
 		int [] playerPositionsResults = new int[playerPositions.length];
 		GameFieldUtils.getPlayerPositions(pfield[Players.SOUTH.pos], playerPositionsResults);
+		System.out.println(Arrays.toString(playerPositionsResults));
 		for (int i = 0; i < playerPositionsResults.length; i++) {
 			assertArrayEquals(playerPositions, playerPositionsResults);
 		}

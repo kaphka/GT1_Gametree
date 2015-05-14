@@ -126,14 +126,20 @@ public class GameFieldUtils {
 	
 	public static int[] getPlayerPositions(long playerPositions, int[] buffer) {
 		long temp = playerPositions;
-		int i = 0;
-		int c = 0;
-		while (temp > 0) {
-			System.out.println(DUtils.getFullLong(temp));
-			// example: Long.numberOfTrailingZeros(0x00100) -> 2
-			i = Long.numberOfTrailingZeros(temp);
-			buffer[c++] = i;
-			temp = temp >> (i + 1);
+		int n = Long.bitCount(temp);
+		int i = -1;
+		int shift = 0;
+		System.out.println("get player position: ");
+		for (int c = 0; c < n; c++) {
+			shift = Long.numberOfTrailingZeros(temp) + 1;
+			i += shift;
+			System.out.println(DUtils.getFullLong(temp) + " i = " + i + " shift = " + shift);
+			// example: Long.numberOfTrailingZeros(0x100) -> 2
+			buffer[c] = i;
+			temp = temp >> shift;			
+		}
+		for (int c = n; c < buffer.length; c++) {
+			buffer[c] = 64;
 		}
 		return buffer;
 	}

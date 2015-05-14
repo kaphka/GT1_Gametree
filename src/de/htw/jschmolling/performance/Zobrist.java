@@ -7,8 +7,8 @@ import de.htw.jschmolling.ai.Players;
 
 public class Zobrist {
 
-	public final static int[][] zobristTable = new int[GameFieldUtils.DIMENSION
-			* GameFieldUtils.DIMENSION][Players.values().length + 1];
+	public final static int[][] zobristTable = new int[Players.values().length
+			+ 1][GameFieldUtils.DIMENSION2];
 
 	static {
 		Random rnd = new Random();
@@ -21,7 +21,20 @@ public class Zobrist {
 
 	public static int hash(long[] field) {
 		int hash = 0;
+		int [] buffer = new int[6];
+		for (Players p : Players.values()) {
+			GameFieldUtils.getPlayerPositions(field[p.pos], buffer);
+			for (int i = 0; i < buffer.length; i++) {
+				if (buffer[i] == 64){
+					break;
+				}
+				hash ^= zobristTable[p.pos][buffer[i]];
+			}
+		}
 		return hash;
+	}
+	public static String print(int h) {
+		return Integer.toHexString(h);
 	}
 
 }
