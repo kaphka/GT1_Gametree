@@ -10,6 +10,7 @@ public class GameFieldUtils {
 	public final static int DIMENSION = 8;
 
 	public final  static int [][] pTable = new int[DIMENSION][DIMENSION];
+	public static final int DIMENSION2 = DIMENSION * DIMENSION;
 	
 	static {
 		for (int y = 0; y < DIMENSION; y++) {
@@ -30,9 +31,25 @@ public class GameFieldUtils {
 		
 		return field;
 	}
-	
+	/**
+	 * sets the field corresponding to x,y to 1
+	 * @param field
+	 * @param pos
+	 * @param x
+	 * @param y
+	 */
 	static public void set(long[] field, int pos, int x, int y){
 		field[pos] = field[pos] | (1l << y * DIMENSION + x);
+	}
+	
+	/**
+	 * sets the nth bit to 1	
+	 * @param field
+	 * @param pos
+	 * @param i
+	 */
+	static public void set(long[] field, int pos, int i){
+		field[pos] = field[pos] | (1l << i);
 	}
 	
 	static public void unset(long[] field, int pos, int x, int y){
@@ -104,6 +121,21 @@ public class GameFieldUtils {
 	public static long[] getEmptyField() {
 		// TODO Auto-generated method stub
 		return new long[Players.values().length];
+	}
+	
+	
+	public static int[] getPlayerPositions(long playerPositions, int[] buffer) {
+		long temp = playerPositions;
+		int i = 0;
+		int c = 0;
+		while (temp > 0) {
+			System.out.println(DUtils.getFullLong(temp));
+			// example: Long.numberOfTrailingZeros(0x00100) -> 2
+			i = Long.numberOfTrailingZeros(temp);
+			buffer[c++] = i;
+			temp = temp >> (i + 1);
+		}
+		return buffer;
 	}
 
 	

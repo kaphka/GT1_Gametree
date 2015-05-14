@@ -4,7 +4,9 @@ import lenz.htw.kimpl.Move;
 
 import org.junit.Test;
 
+import de.htw.jschmolling.ai.DUtils;
 import de.htw.jschmolling.ai.GameFieldUtils;
+import de.htw.jschmolling.ai.GameUtils;
 import de.htw.jschmolling.ai.Players;
 import de.htw.jschmolling.performance.Zobrist;
 import static org.junit.Assert.*;
@@ -19,7 +21,7 @@ public class AIIntegrationTest {
 	@Test
 	public void testPrintEmpty() throws Exception {
 		long[] field = new long[Players.values().length];
-		System.out.println(GameFieldUtils.toString(field));
+//		System.out.println(GameFieldUtils.toString(field));
 		for (int y = 0; y < GameFieldUtils.DIMENSION; y++) {
 			for (int x = 0; x < GameFieldUtils.DIMENSION; x++) {
 				for (Players p : Players.values()) {
@@ -53,7 +55,30 @@ public class AIIntegrationTest {
 	public void testZobrist() throws Exception {
 		long[] field = GameFieldUtils.getEmptyField();
 		int hash = Zobrist.hash(field);
-		System.out.println(hash);
+//		System.out.println(hash);
+	}
+	
+	@Test
+	public void testGetPlayerPositions() throws Exception {
+		int [] playerPositions = { 0, 5, 8, 5, 63, 2};
+		long [] pfield = GameFieldUtils.getEmptyField();
+		for (int i = 0; i < playerPositions.length; i++) {
+			GameFieldUtils.set(pfield, Players.SOUTH.pos, playerPositions[i]);
+		}
+		
+		int [] playerPositionsResults = new int[playerPositions.length];
+		GameFieldUtils.getPlayerPositions(pfield[Players.SOUTH.pos], playerPositionsResults);
+		for (int i = 0; i < playerPositionsResults.length; i++) {
+			assertArrayEquals(playerPositions, playerPositionsResults);
+		}
+	}
+	
+	@Test
+	public void testSet64() throws Exception {
+		long [] s = GameFieldUtils.getEmptyField();
+		GameFieldUtils.set(s, 0, 63);
+		System.out.println("set long " + DUtils.getFullLong(s[0]));
+		System.out.println("long     " + Long.toBinaryString(0l | 1l << 63));
 	}
 
 }
