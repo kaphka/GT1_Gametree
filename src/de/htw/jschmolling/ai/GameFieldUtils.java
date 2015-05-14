@@ -2,7 +2,12 @@ package de.htw.jschmolling.ai;
 
 import lenz.htw.kimpl.Move;
 
-
+/**
+ * Helps to store the state of the board into 4 long values.
+ * 
+ * @author jschmolling
+ *
+ */
 public class GameFieldUtils {
 
 	public static final int EMPTY_POSITION = 64;

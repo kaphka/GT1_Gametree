@@ -1,12 +1,16 @@
 package de.htw.jschmolling.ai.test;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 import de.htw.jschmolling.ai.GameFieldUtils;
 import de.htw.jschmolling.ai.Players;
 
+/**
+ * Stress test. Measurements.
+ * 
+ * @author jschmolling
+ *
+ */
 public class PerformanceTest {
 
 	@Test

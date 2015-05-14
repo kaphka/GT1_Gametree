@@ -6,6 +6,12 @@ import de.htw.jschmolling.ai.GameFieldUtils;
 import de.htw.jschmolling.ai.Players;
 import de.htw.jschmolling.ai.SMove;
 
+/**
+ * Provides Zobrist hash methods
+ * 
+ * @author jschmolling
+ *
+ */
 public class Zobrist {
 
 	public final static int[][] zobristTable = new int[Players.values().length

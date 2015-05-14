@@ -1,9 +1,9 @@
 package de.htw.jschmolling.ai;
 
-import java.util.ArrayList;
-import java.util.List;
 
-/*
+/**
+ * Describes all player positions and move directions
+ * 
  * Starting Positions:
  *  y
  *  ^

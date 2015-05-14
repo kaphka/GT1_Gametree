@@ -1,12 +1,17 @@
 package de.htw.jschmolling.ai;
 
 import static de.htw.jschmolling.ai.GameFieldUtils.DIMENSION;
-
-import java.awt.Dimension;
-
 import lenz.htw.kimpl.Move;
 
-
+/**
+ * This class helps to store a move description in one integer value.
+ * 
+ * Design: 6 bits per coordinates because 2^6 = 64;
+ * the value 64 is used for invalid positions
+ * 
+ * @author jschmolling
+ *
+ */
 public class SMove {
 	
 	public static final Move defaultMove = new Move(0, 0, 0, 0);

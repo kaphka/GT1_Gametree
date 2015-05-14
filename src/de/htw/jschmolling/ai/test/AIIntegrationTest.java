@@ -1,5 +1,9 @@
 package de.htw.jschmolling.ai.test;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
 
 import lenz.htw.kimpl.Move;
@@ -8,12 +12,16 @@ import org.junit.Test;
 
 import de.htw.jschmolling.ai.DUtils;
 import de.htw.jschmolling.ai.GameFieldUtils;
-import de.htw.jschmolling.ai.GameUtils;
 import de.htw.jschmolling.ai.Players;
 import de.htw.jschmolling.ai.SMove;
 import de.htw.jschmolling.performance.Zobrist;
-import static org.junit.Assert.*;
 
+/**
+ * General purpose tests.
+ * 
+ * @author jschmolling
+ *
+ */
 public class AIIntegrationTest {
 	
 	@Test

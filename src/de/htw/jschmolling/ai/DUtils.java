@@ -1,6 +1,12 @@
 package de.htw.jschmolling.ai;
 import static de.htw.jschmolling.ai.GameFieldUtils.isSet;
 
+/**
+ * General utility methods.
+ * 
+ * @author jschmolling
+ *
+ */
 public class DUtils {
 
 	public static String getFullLong(long l) {
