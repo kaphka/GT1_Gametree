@@ -1,4 +1,5 @@
 package de.htw.jschmolling.ai;
+import static de.htw.jschmolling.ai.GameFieldUtils.isSet;
 
 public class DUtils {
 
@@ -8,7 +9,7 @@ public class DUtils {
 			if (i % 8 == 0) {
 				s = " " + s;
 			}
-			if (GameFieldUtils.isSet(l, i)) {
+			if (isSet(l, i)) {
 				s = "1" + s;
 			}else{
 				s = "0" + s;
