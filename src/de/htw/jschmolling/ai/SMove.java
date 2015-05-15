@@ -81,6 +81,10 @@ public class SMove {
 		}
 	}
 	
+	public static int unmove(int smove) {
+		return smove >> SHIFT_FROM | ((smove & TO_SIDE) << SHIFT_FROM);
+	}
+	
 //	public static int getFromX(int smove){
 //		
 //	}

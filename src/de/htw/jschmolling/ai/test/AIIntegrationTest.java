@@ -1,8 +1,6 @@
 package de.htw.jschmolling.ai.test;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 
@@ -123,6 +121,13 @@ public class AIIntegrationTest {
 		for (int i : moves) {
 			System.out.println(SMove.toString(i));
 		}
+	}
+	
+	@Test
+	public void testUnmove() throws Exception {
+		int smove = SMove.newSMove(5, 62);
+		int unmove = SMove.unmove(smove);
+		assertEquals(smove, SMove.unmove(unmove));
 	}
 
 }
