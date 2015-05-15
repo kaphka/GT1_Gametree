@@ -17,10 +17,16 @@ public class SMove {
 	public static final Move defaultMove = new Move(0, 0, 0, 0);
 	private static final int SHIFT_FROM = 6;
 	private static final int TO_SIDE = 0b111111;
+	
+	private static final int HIT_MOVE_SHIFT = 14;
+	private static final int HIT_MOVE_BIT = 1 << HIT_MOVE_SHIFT - 1;
+	private static final int PLAYER_HIT_MASK = 0b11 << HIT_MOVE_SHIFT;
+	
+	public static final int UNMOVE_FLAG = 1 << 16;
 
 	public static Move getMoveObject(int smove) {
-		int from = smove >> SHIFT_FROM;
-		int to = smove & TO_SIDE;
+		int from = from(smove);
+		int to = to(smove);
 		return new Move(from % DIMENSION, from / DIMENSION, to % DIMENSION, to
 				/ DIMENSION);
 	}
@@ -30,7 +36,7 @@ public class SMove {
 	}
 
 	public static int from(int smove) {
-		return smove >> SHIFT_FROM;
+		return (smove >> SHIFT_FROM) & TO_SIDE;
 	}
 
 	public static int to(int smove) {
@@ -43,10 +49,29 @@ public class SMove {
 	}
 
 	public static String toString(int smove) {
-		if (smove == GameFieldUtils.EMPTY_POSITION) {
+		if (to(smove) == GameFieldUtils.EMPTY_POSITION) {
 			return "invalid";
 		}
-		return getMoveObject(smove).toString();
+		String s = "";
+		if (isHit(smove)) {
+			s += " hits player: " + getHitPlayer(smove).toString();
+		}
+		if (isUnMove(smove)){
+			s += " unmove";
+		}
+		return getMoveObject(smove).toString() + s;
+	}
+
+	private static boolean isUnMove(int smove) {
+		return Integer.bitCount(smove & UNMOVE_FLAG) == 1;
+	}
+
+	public static Players getHitPlayer(int smove) {
+		return Players.values()[(smove & PLAYER_HIT_MASK) >> HIT_MOVE_SHIFT];
+	}
+
+	public static boolean isHit(int smove) {
+		return Integer.bitCount(smove & HIT_MOVE_BIT) == 1;
 	}
 
 	public static void getPossibleMoves(long[] field, Players p,
@@ -89,7 +114,11 @@ public class SMove {
 	}
 
 	public static int unmove(int smove) {
-		return smove >> SHIFT_FROM | ((smove & TO_SIDE) << SHIFT_FROM);
+		return  from(smove) | (to(smove) << SHIFT_FROM) | smove & PLAYER_HIT_MASK | UNMOVE_FLAG | smove & HIT_MOVE_BIT;
+	}
+	
+	public static int setHitPlayer(int smove, Players p) {
+		return smove | HIT_MOVE_BIT | (p.pos  << HIT_MOVE_SHIFT);
 	}
 
 	// public static int getFromX(int smove){

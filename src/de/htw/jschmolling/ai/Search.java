@@ -10,10 +10,6 @@ public class Search {
 //		System.out.println("\nDepth: " + depth + " " + movingPlayer.toString());
 //		System.out.println(GameFieldUtils.toString(field));
 		int result = 0;
-		if (depth == 6){
-//			
-//			System.out.println();
-		}
 		if (depth == limit) {
 			return depth;
 		} else {

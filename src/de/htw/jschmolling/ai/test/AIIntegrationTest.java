@@ -127,7 +127,7 @@ public class AIIntegrationTest {
 	public void testUnmove() throws Exception {
 		int smove = SMove.newSMove(5, 62);
 		int unmove = SMove.unmove(smove);
-		assertEquals(smove, SMove.unmove(unmove));
+		assertEquals(smove | SMove.UNMOVE_FLAG, SMove.unmove(unmove));
 	}
 	
 	@Test
@@ -151,6 +151,18 @@ public class AIIntegrationTest {
 	public void testStartingPositions() throws Exception {
 		long [] field = GameFieldUtils.createInital();
 		System.out.println(GameFieldUtils.toString(field));
+	}
+	
+	@Test
+	public void testHitMove() throws Exception {
+		long [] field = GameFieldUtils.createInital();
+		int hash = Zobrist.hash(field);
+		int move = SMove.newSMove(2, 8);
+		move = SMove.setHitPlayer(move, Players.WEST);
+		int unmove = SMove.unmove(move);
+		System.out.println(SMove.toString(move));
+		System.out.println(SMove.toString(unmove));
+		int rehash = Zobrist.rehash(hash, Players.SOUTH.pos, move);
 	}
 
 }

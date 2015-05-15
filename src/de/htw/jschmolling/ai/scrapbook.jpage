@@ -1,0 +1,6 @@
+int i = 1 << 14;
+
+Integer.toBinaryString(de.htw.jschmolling.ai.SMove.isHit(0b0110000000000000))
+1100000000000000
+
+1100000000000000
