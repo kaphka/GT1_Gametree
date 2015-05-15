@@ -67,7 +67,7 @@ public class AIIntegrationTest {
 		GameFieldUtils.set(field, Players.SOUTH.pos, 2);
 		GameFieldUtils.set(field, Players.NORTH.pos, 32);
 		int hash = Zobrist.hash(field);
-		System.out.println(Zobrist.print(hash));
+//		System.out.println(Zobrist.print(hash));
 	}
 	
 	@Test
@@ -78,13 +78,13 @@ public class AIIntegrationTest {
 		GameFieldUtils.set(field, Players.NORTH.pos, 32);
 		int hash = Zobrist.hash(field);
 		int smove = SMove.newSMove(0, 0,0,1);
-		System.out.println(Integer.toString(smove));
-		System.out.println("Move: " + SMove.toString(smove));
+//		System.out.println(Integer.toString(smove));
+//		System.out.println("Move: " + SMove.toString(smove));
 	}
 	
 	@Test
 	public void testGetPlayerPositions() throws Exception {
-		int [] playerPositions = { 0, 2, 5, 7, 63, 64 };
+		int [] playerPositions = { 0, 2, 5, 7, 63, GameFieldUtils.EMPTY_POSITION };
 		long [] pfield = GameFieldUtils.getEmptyField();
 		for (int i = 0; i < playerPositions.length - 1; i++) {
 			GameFieldUtils.set(pfield, Players.SOUTH.pos, playerPositions[i]);
@@ -104,8 +104,8 @@ public class AIIntegrationTest {
 	public void testSet64() throws Exception {
 		long [] s = GameFieldUtils.getEmptyField();
 		GameFieldUtils.set(s, 0, 63);
-		System.out.println("set long " + DUtils.getFullLong(s[0]));
-		System.out.println("long     " + Long.toBinaryString(0l | 1l << 63));
+//		System.out.println("set long " + DUtils.getFullLong(s[0]));
+//		System.out.println("long     " + Long.toBinaryString(0l | 1l << 63));
 	}
 	
 	@Test
@@ -128,6 +128,29 @@ public class AIIntegrationTest {
 		int smove = SMove.newSMove(5, 62);
 		int unmove = SMove.unmove(smove);
 		assertEquals(smove, SMove.unmove(unmove));
+	}
+	
+	@Test
+	public void testPerfomMove() throws Exception {
+		long [] field = GameFieldUtils.getEmptyField();
+		GameFieldUtils.set(field, Players.NORTH.pos, 0);
+		int smove = SMove.newSMove(0, 1);
+		GameFieldUtils.performMove(field, smove, Players.NORTH);
+		System.out.println(GameFieldUtils.toString(field));
+	}
+	
+	@Test
+	public void testNextPlayer() throws Exception {
+		Players p = Players.NORTH;
+		for (int i = 0; i < 100	; i++) {
+			p = p.next();
+		}
+	}
+	
+	@Test
+	public void testStartingPositions() throws Exception {
+		long [] field = GameFieldUtils.createInital();
+		System.out.println(GameFieldUtils.toString(field));
 	}
 
 }

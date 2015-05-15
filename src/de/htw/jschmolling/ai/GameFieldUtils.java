@@ -10,7 +10,7 @@ import lenz.htw.kimpl.Move;
  */
 public class GameFieldUtils {
 
-	public static final int EMPTY_POSITION = 64;
+	public static final int EMPTY_POSITION = 0b1000000000000;
 	public final static int INT_NUMBER = 4;
 	public final static int NUMBER_OF_TOKENS = 6;
 	public final static int DIMENSION = 8;
@@ -26,15 +26,13 @@ public class GameFieldUtils {
 		}
 	}
 	static public long[] createInital() {
-		long[] field = new long[INT_NUMBER];
+		long[] field = getEmptyField();
 		
 		for (Players player : Players.values()) {
-			for (int i = 0; i < NUMBER_OF_TOKENS ; i++) {
-				
+			for (int pos : Players.STARTING_POSITIONS[player.pos]) {
+				set(field, player.pos, pos);
 			}			
 		}
-		
-		
 		return field;
 	}
 	/**
@@ -61,6 +59,13 @@ public class GameFieldUtils {
 	static public void unset(long[] field, int pos, int x, int y){
 		field[pos] = field[pos] & ~(1l << y * DIMENSION + x);
 	}
+	
+	static public long unset(long field, int bit){
+		return field & ~(1l << bit);
+	}
+	
+	
+	
 	static public boolean isSet(long[] field, int pos, int x, int y) {
 		if ((field[pos] & (1l << y * DIMENSION + x)) > 0) {
 			return true;
@@ -88,9 +93,10 @@ public class GameFieldUtils {
 	}
 	
 	public static String toString(long[] fieldState) {
-		System.out.println(fieldState);
+//		System.out.println(fieldState);
 		StringBuffer b = new StringBuffer(DIMENSION*DIMENSION + 8);
 		for (int y = DIMENSION - 1; y >= 0; --y) {
+			b.append("" + y + " ");
 			for (int x = 0 ; x < DIMENSION; ++x) {
 				int c = 0;
 				for (Players p : Players.values()) {
@@ -105,6 +111,10 @@ public class GameFieldUtils {
 //				b.append(String.format("(%s,%s)", x,y));
 			}
 			b.append("\n");
+		}
+		b.append("  ");
+		for (int x = 0; x < DIMENSION; x++) {
+			b.append("" + x);
 		}
 		return b.toString();
 	}
@@ -153,6 +163,22 @@ public class GameFieldUtils {
 			   !isSet(field[1], sposition) &&
 			   !isSet(field[2], sposition) &&
 			   !isSet(field[3], sposition);
+	}
+	public static void performMove(long[] field, int smove, Players movingPlayer) {
+		int from = SMove.from(smove);
+		int to   = SMove.to(smove);
+		field[0] = unset(field[0], from);
+		field[1] = unset(field[1], from);
+		field[2] = unset(field[2], from);
+		field[3] = unset(field[3], from);
+		
+		field[0] = unset(field[0], to);
+		field[1] = unset(field[1], to);
+		field[2] = unset(field[2], to);
+		field[3] = unset(field[3], to);
+		
+		set(field, movingPlayer.pos, to);
+		
 	}
 
 	

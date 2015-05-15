@@ -32,7 +32,7 @@ public class Zobrist {
 		for (Players p : Players.values()) {
 			GameFieldUtils.getPlayerPositions(field[p.pos], buffer);
 			for (int i = 0; i < buffer.length; i++) {
-				if (buffer[i] == 64){
+				if (buffer[i] == GameFieldUtils.EMPTY_POSITION){
 					break;
 				}
 				hash ^= zobristTable[p.pos][buffer[i]];

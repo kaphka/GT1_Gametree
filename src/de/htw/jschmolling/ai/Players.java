@@ -53,6 +53,12 @@ public enum Players {
 	
 	static public final int[][] dir = {DIR_MOVE_N,DIR_MOVE_E,DIR_MOVE_S,DIR_MOVE_W};
 	
+	static public final int[] N_STARTING_POS = {57, 58, 59, 60, 61, 62};
+	static public final int[] E_STARTING_POS = {15, 23, 31, 39, 47, 55};
+	static public final int[] S_STARTING_POS = {1, 2, 3, 4, 5, 6};
+	static public final int[] W_STARTING_POS = {8, 16, 24, 32, 40, 48};
+	static public final int[][] STARTING_POSITIONS = {N_STARTING_POS, E_STARTING_POS, S_STARTING_POS, W_STARTING_POS};
+	
 	
 	public final int pos;
 
@@ -80,6 +86,10 @@ public enum Players {
 		default:
 			return "Invalid";
 		}
+	}
+
+	public Players next() {
+		return Players.values()[(this.pos + 1) % Players.values().length];
 	}
 
 }
