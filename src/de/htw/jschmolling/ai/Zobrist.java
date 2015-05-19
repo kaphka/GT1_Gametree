@@ -52,5 +52,9 @@ public class Zobrist {
 	public static String print(int h) {
 		return Integer.toHexString(h);
 	}
+	
+	public int getData(int [] table, int hash) {
+		return table[(int) (Integer.toUnsignedLong(hash) % table.length)];
+	}
 
 }

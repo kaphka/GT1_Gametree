@@ -1,11 +1,15 @@
 import java.awt.image.BufferedImage;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import lenz.htw.kimpl.Move;
 import lenz.htw.kimpl.net.NetworkClient;
 import de.htw.jschmolling.ai.GameFieldUtils;
+import de.htw.jschmolling.ai.GameFieldUtils.EvalStrategy;
 import de.htw.jschmolling.ai.Players;
 import de.htw.jschmolling.ai.SMove;
+import de.htw.jschmolling.ai.Search;
+import de.htw.jschmolling.ai.Search.OrderStrategy;
 
 
 public class NClient implements Runnable {
@@ -20,14 +24,19 @@ public class NClient implements Runnable {
 	private final String ip;
 	private final String basicName;
 	private final BufferedImage image;
+	
+	private final Search searcher;
 
 	public NClient(String ip, String name, BufferedImage image) {
 		this.ip = ip;
 		this.basicName = name;
 		this.image = image;
+		this.name = name;
+		
+		this.searcher = new Search(EvalStrategy.HIT_FIRST, OrderStrategy.RANDOM);
 	}
 
-	private void init(String ip, String name, BufferedImage image) {
+	private void init() {
 		System.out.println(name + ": waiting for start");
 		nc = new NetworkClient(ip, name, image);
 		msTimeLimit = TimeUnit.SECONDS.toMillis(nc.getTimeLimitInSeconds());
@@ -40,20 +49,22 @@ public class NClient implements Runnable {
 		System.out.println(this.name + ".playerNumber= " + nc.getMyPlayerNumber());
 		currentPlayer = Players.fromServerNumber(0);
 		field = GameFieldUtils.createInital();
+		
+		this.searcher.setTimeLimit(msTimeLimit);
 	}
 
 	@Override
 	public void run() {
-		init(ip, basicName, image);
+		init();
 		
 		Move nextMove = null;
 		int move = GameFieldUtils.INVALID_POSITION;
 		int round = 0;
 		
 		do {
-			if(basicName == "none"){
-				break;
-			}
+//			if(basicName == "none"){
+//				break;
+//			}
 			
 			nextMove = nc.receiveMove();
 			if (nextMove != null){
@@ -62,7 +73,10 @@ public class NClient implements Runnable {
 				System.out.println(name + ":recieved move: " + SMove.toString(move));
 			} else {
 				currentPlayer = localPlayer;
-				move = getFirstMove(field, localPlayer);
+				searcher.setTimeLimit(msTimeLimit);
+				
+				move = searcher.getBestMove(field, currentPlayer);
+				
 				System.out.println(name + "-----new move-----");
 //				System.out.println(GameFieldUtils.toString(field));
 				System.out.println(localPlayer + " move: " + SMove.toString(move));
@@ -86,6 +100,7 @@ public class NClient implements Runnable {
 		
 	}
 	
+
 	private boolean isEmptyServerMove(Move nextMove) {
 		return nextMove.fromX == 0 && nextMove.fromY == 0
 				&& nextMove.toX == 0 && nextMove.toY == 0;
@@ -99,5 +114,16 @@ public class NClient implements Runnable {
 
 	public String getName() {
 		return basicName;
+	}
+
+	public static BufferedImage getEmptyImage() {
+		// TODO Auto-generated method stub
+		return new BufferedImage(256,256,BufferedImage.TYPE_INT_ARGB);
+	}
+
+	public void start() {
+		Thread tconn = new Thread(this, basicName);
+		tconn.start();
+		
 	}
 }

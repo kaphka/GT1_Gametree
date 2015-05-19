@@ -91,13 +91,9 @@ public class SMove {
 			if (playerPos == INVALID_POSITION) {
 				break;
 			}
-			middlePos = add(playerPos, dirMiddle);
 			leftPos   = add(playerPos, dirLeft);
 			rightPos  = add(playerPos, dirRight);
-			if (middlePos != INVALID_POSITION
-					&& GameFieldUtils.isEmptyPosition(field, middlePos)) {
-				resultBuffer[cMoves++] = newSMove(playerPos, middlePos );
-			}
+			middlePos = add(playerPos, dirMiddle);
 			
 			int leftHitPlayer  = GameFieldUtils.getPlayerNumber(field, leftPos);
 			int rightHitPlayer = GameFieldUtils.getPlayerNumber(field, rightPos);
@@ -112,10 +108,19 @@ public class SMove {
 				hitRight = setHitPlayer(hitRight, rightHitPlayer);
 				resultBuffer[cMoves++] = hitRight;
 			}
+			
+			if (canMove(field, middlePos)) {
+				resultBuffer[cMoves++] = newSMove(playerPos, middlePos );
+			}
 		}
 		for (int i = cMoves; i < resultBuffer.length; i++) {
 			resultBuffer[i] = INVALID_POSITION;
 		}
+	}
+
+	private static boolean canMove(long[] field, int middlePos) {
+		return middlePos != INVALID_POSITION
+				&& GameFieldUtils.isEmptyPosition(field, middlePos);
 	}
 
 	private static boolean canHit(int currentPos, int leftPos, int leftHitPlayer) {
@@ -172,9 +177,5 @@ public class SMove {
 			System.out.println(toString(move));
 		}
 	}
-
-	// public static int getFromX(int smove){
-	//
-	// }
 
 }

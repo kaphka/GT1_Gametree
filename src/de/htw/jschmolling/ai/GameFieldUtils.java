@@ -18,7 +18,7 @@ public class GameFieldUtils {
 	public final  static int [][] pTable = new int[DIMENSION][DIMENSION];
 	public static final int DIMENSION2 = DIMENSION * DIMENSION;
 	private static final int SCORE_PER_MOVE = 1;
-	private static final int SCORE_PER_HIT = 1;
+	private static final int SCORE_PER_HIT = 5;
 	
 	static {
 		for (int y = 0; y < DIMENSION; y++) {
@@ -200,11 +200,14 @@ public class GameFieldUtils {
 	public enum EvalStrategy{
 		HIT_FIRST
 	}
+	
+	
 	public static int eval(EvalStrategy s, long[] field, Players movingPlayer){
 		switch (s) {
 		case HIT_FIRST:
 			return evalHIT_FIRST(field, movingPlayer);
-
+//		case RANDOM:
+//			return evalRANDOM(field,movingPlayer);
 		default:
 			return 0;
 		}
@@ -212,18 +215,25 @@ public class GameFieldUtils {
 	
 	public static int evalHIT_FIRST(long[] field, Players movingPlayer) {
 		int score = 0;
-//		System.out.println("Evalutation for " + movingPlayer);
+		
 		for (Players p : Players.values()) {
+			int [] buffer = new int[6];
+			for (int i : getPlayerPositions(field[p.pos], buffer)) {
+				score += 5 * ((movingPlayer == p)?1:-1);
+			}
 			int scoreMoves = 0;
 			int [] moves = new int[6 * 3];
 			int [] positions = new int[6];
-			SMove.getPossibleMoves(field, p, positions,moves);
+			SMove.getPossibleMoves(field, p, positions, moves);
+			SMove.getPossibleMoves(field, p, positions, moves);
 			for (int move : moves) {
 				if (move == INVALID_POSITION){
 					break;
 				} else {
+//					Players.dir[]
 					scoreMoves += SCORE_PER_MOVE;
 					if (SMove.isHit(move)){
+//						System.out.println( p.toString() + " " + SMove.toString(move) );
 						scoreMoves += SCORE_PER_HIT;
 					}
 				}
