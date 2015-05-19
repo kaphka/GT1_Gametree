@@ -6,10 +6,7 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
-
-import com.sun.corba.se.impl.orbutil.closure.Future;
 
 import de.htw.jschmolling.ai.GameFieldUtils.EvalStrategy;
 
@@ -52,7 +49,7 @@ public class Search {
 //		System.out.println("\nDepth: " + depth + " " + movingPlayer.toString());
 //		System.out.println(GameFieldUtils.toString(field));
 		maxDepth = Math.max(depth, maxDepth);
-		if (depth == limit 
+		if (depth >= limit 
 				|| System.nanoTime() > stopTime 
 				) {
 			return GameFieldUtils.eval(s,field, movingPlayer);
@@ -60,8 +57,9 @@ public class Search {
 
 		int maxAlpha = alpha;
 		int result = 0;
-		int [] moves = new int[6 * 3];
-		int [] positionsBuffer = new int[6];
+		
+//		int [] moves = new int[6 * 3];
+//		int [] positionsBuffer = new int[6];
 		int [] orderedMoves = new int[6 * 3];
 		
 		SMove.getPossibleMoves(field, movingPlayer, positionsBuffer,moves);
@@ -119,6 +117,10 @@ public class Search {
 		arr[b] = arr[a] ^ arr[b];
 		arr[a] = arr[a] ^ arr[b];
 	}
+	
+	int [] moves = new int[6 * 3];
+	int [] positionsBuffer = new int[6];
+	int [] orderedMoves = new int[6 * 3];
 
 	public int search(long[] field, Players movingPlayer, int limit, int hash) {
 		System.out.println("<-- start search for " + movingPlayer + " limit=" + limit);
@@ -127,9 +129,13 @@ public class Search {
 		for (int i = 0; i < limit; i++) {
 			System.out.println("" + i);
 			try {
+				moves = new int[6 * 3];
+				positionsBuffer = new int[6];
+				orderedMoves = new int[6 * 3];
 				int max = DLS(field, movingPlayer, 0, i, hash, Integer.MIN_VALUE, Integer.MAX_VALUE);			
 			} catch (RuntimeException e) {
-				System.out.println(e);
+				e.printStackTrace();
+				System.out.println(GameFieldUtils.toString(field));
 				System.out.println("Search arborted");
 			}
 		}

@@ -219,7 +219,7 @@ public class GameFieldUtils {
 		for (Players p : Players.values()) {
 			int [] buffer = new int[6];
 			for (int i : getPlayerPositions(field[p.pos], buffer)) {
-				score += 5 * ((movingPlayer == p)?1:-1);
+				score += 8 * ((movingPlayer == p)?1:-1);
 			}
 			int scoreMoves = 0;
 			int [] moves = new int[6 * 3];
