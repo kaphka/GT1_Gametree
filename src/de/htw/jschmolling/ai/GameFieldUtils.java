@@ -57,21 +57,21 @@ public class GameFieldUtils {
 	}
 	
 	static public void unset(long[] field, int pos, int x, int y){
-		field[pos] = field[pos] & ~(1l << y * DIMENSION + x);
+		unset(field, pos, y * DIMENSION + x);
 	}
 	
-	static public long unset(long field, int bit){
-		return field & ~(1l << bit);
+	static public void unset(long[] field, int p, int pos){
+		field[p] = unset(field[p], pos);
+	}
+	
+	static private long unset(long field, int pos){
+		return field & ~(1l << pos);
 	}
 	
 	
 	
 	static public boolean isSet(long[] field, int pos, int x, int y) {
-		if ((field[pos] & (1l << y * DIMENSION + x)) > 0) {
-			return true;
-		}else{
-			return false;
-		}
+		return isSet(field[pos], y * DIMENSION + x);
 	}
 	
 	static public boolean isSet(long field, int pos) {
@@ -164,11 +164,10 @@ public class GameFieldUtils {
 	}
 	
 	public static int getPlayerNumber(long[] field, int sposition) {
-		return (int) (
-			   field[0] >> sposition & 0b1 + 
-			   field[1] >> sposition & 0b1 + 
-			   field[2] >> sposition & 0b1 +
-			   field[3] >> sposition & 0b1 - 1);
+		return (isSet(field[0],sposition)?0:
+			   (isSet(field[1],sposition)?1:
+			   (isSet(field[2],sposition)?2:
+			   (isSet(field[3],sposition)?3:Players.NEUTRAL))));
 //		return !isSet(field[0], sposition) +
 //			   !isSet(field[1], sposition) +
 //			   !isSet(field[2], sposition) +

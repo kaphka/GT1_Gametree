@@ -50,7 +50,7 @@ public class SMove {
 	}
 
 	public static String toString(int smove) {
-		if (to(smove) == GameFieldUtils.INVALID_POSITION) {
+		if (smove == GameFieldUtils.INVALID_POSITION) {
 			return "invalid";
 		}
 		String s = "";
@@ -86,20 +86,29 @@ public class SMove {
 		int middlePos = INVALID_POSITION;
 		int leftPos   = INVALID_POSITION;
 		int rightPos  = INVALID_POSITION;
-		for (int i : positionsBuffer) {
-			if (i == INVALID_POSITION) {
+		for (int playerPos : positionsBuffer) {
+			if (playerPos == INVALID_POSITION) {
 				break;
 			}
-			middlePos = add(i, dirMiddle);
-			leftPos   = add(i, dirLeft);
-			rightPos  = add(i, dirLeft);
+			middlePos = add(playerPos, dirMiddle);
+			leftPos   = add(playerPos, dirLeft);
+			rightPos  = add(playerPos, dirRight);
 			if (middlePos != INVALID_POSITION
 					&& GameFieldUtils.isEmptyPosition(field, middlePos)) {
-				resultBuffer[cMoves++] = newSMove(i, middlePos );
+				resultBuffer[cMoves++] = newSMove(playerPos, middlePos );
 			}
-//			if (leftPos != INVALID_POSITION && GameFieldUtils.getPlayerNumber(field, x, y)) {
-//				
-//			}
+			int leftHitPlayer = GameFieldUtils.getPlayerNumber(field, leftPos);
+			int righHitPlayer = GameFieldUtils.getPlayerNumber(field, rightPos);
+			if (leftPos != INVALID_POSITION && leftHitPlayer != Players.NEUTRAL) {
+				int hitLeft = newSMove(playerPos, leftPos);
+				hitLeft = setHitPlayer(hitLeft, leftHitPlayer);
+				resultBuffer[cMoves++] = hitLeft;
+			}
+			if (rightPos != INVALID_POSITION && righHitPlayer != Players.NEUTRAL) {
+				int hitRight = newSMove(playerPos, rightPos);
+				hitRight = setHitPlayer(hitRight, righHitPlayer);
+				resultBuffer[cMoves++] = hitRight;
+			}
 		}
 		for (int i = cMoves; i < resultBuffer.length; i++) {
 			resultBuffer[i] = INVALID_POSITION;
@@ -128,7 +137,11 @@ public class SMove {
 	}
 	
 	public static int setHitPlayer(int smove, Players p) {
-		return smove | HIT_MOVE_BIT | (p.pos  << HIT_MOVE_SHIFT);
+		return setHitPlayer(smove, p.pos);
+	}
+	
+	public static int setHitPlayer(int smove, int pos) {
+		return smove | HIT_MOVE_BIT | (pos  << HIT_MOVE_SHIFT);
 	}
 
 	// public static int getFromX(int smove){

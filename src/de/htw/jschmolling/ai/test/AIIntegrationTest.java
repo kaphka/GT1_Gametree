@@ -191,5 +191,29 @@ public class AIIntegrationTest {
 		assertEquals(hashMoved, rehashMoved);
 		
 	}
+	
+	@Test
+	public void testStartingMoves() throws Exception {
+		long [] field = GameFieldUtils.createInital();
+		int [] moves = SMove.getPossibleMoves(field, Players.SOUTH);
+		System.out.println("Starting moves: ");
+		for (int move : moves) {
+			System.out.println(SMove.toString(move));
+		}
+	}
+	
+	@Test
+	public void testGetPlayerNumber() throws Exception {
+		long [] field = GameFieldUtils.getEmptyField();
+		for (Players p : Players.values()) {
+			for (int i = 0; i < GameFieldUtils.DIMENSION2; i++) {
+				GameFieldUtils.set(field, p.pos, i);
+//				System.out.println("" + p.toString() + " " + i);
+//				System.out.println(GameFieldUtils.toString(field));
+				assertEquals(p.pos, GameFieldUtils.getPlayerNumber(field, i));
+				GameFieldUtils.unset(field, p.pos, i);
+			}
+		}
+	}
 
 }

@@ -74,7 +74,9 @@ public enum Players {
 	static public final int[] W_STARTING_POS = {8, 16, 24, 32, 40, 48};
 	static public final int[][] STARTING_POSITIONS = {N_STARTING_POS, E_STARTING_POS, S_STARTING_POS, W_STARTING_POS};
 	
-	
+	static public String[][] arrows = {{"↖", "↑", "↗"},
+									   {"←", "_", "→"},
+									   {"↙", "↓", "↘"}};
 	public final int pos;
 
 	
