@@ -142,10 +142,15 @@ public class AIIntegrationTest {
 	
 	@Test
 	public void testNextPlayer() throws Exception {
-		Players p = Players.NORTH;
-		for (int i = 0; i < 100	; i++) {
+		Players p = Players.SOUTH;
+		String order = "ENWS";
+		String s = "";
+		for (int i = 0; i < 4	; i++) {
 			p = p.next();
+			s += p.toString();
 		}
+		
+		assertEquals(order, s);
 	}
 	
 	@Test

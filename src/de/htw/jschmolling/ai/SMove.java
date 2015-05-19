@@ -86,6 +86,7 @@ public class SMove {
 		int middlePos = INVALID_POSITION;
 		int leftPos   = INVALID_POSITION;
 		int rightPos  = INVALID_POSITION;
+		
 		for (int playerPos : positionsBuffer) {
 			if (playerPos == INVALID_POSITION) {
 				break;
@@ -97,22 +98,28 @@ public class SMove {
 					&& GameFieldUtils.isEmptyPosition(field, middlePos)) {
 				resultBuffer[cMoves++] = newSMove(playerPos, middlePos );
 			}
-			int leftHitPlayer = GameFieldUtils.getPlayerNumber(field, leftPos);
-			int righHitPlayer = GameFieldUtils.getPlayerNumber(field, rightPos);
-			if (leftPos != INVALID_POSITION && leftHitPlayer != Players.NEUTRAL) {
+			
+			int leftHitPlayer  = GameFieldUtils.getPlayerNumber(field, leftPos);
+			int rightHitPlayer = GameFieldUtils.getPlayerNumber(field, rightPos);
+			
+			if (canHit(p.pos, leftPos, leftHitPlayer)) {
 				int hitLeft = newSMove(playerPos, leftPos);
 				hitLeft = setHitPlayer(hitLeft, leftHitPlayer);
 				resultBuffer[cMoves++] = hitLeft;
 			}
-			if (rightPos != INVALID_POSITION && righHitPlayer != Players.NEUTRAL) {
+			if (canHit(p.pos, rightPos, rightHitPlayer)) {
 				int hitRight = newSMove(playerPos, rightPos);
-				hitRight = setHitPlayer(hitRight, righHitPlayer);
+				hitRight = setHitPlayer(hitRight, rightHitPlayer);
 				resultBuffer[cMoves++] = hitRight;
 			}
 		}
 		for (int i = cMoves; i < resultBuffer.length; i++) {
 			resultBuffer[i] = INVALID_POSITION;
 		}
+	}
+
+	private static boolean canHit(int currentPos, int leftPos, int leftHitPlayer) {
+		return leftPos != INVALID_POSITION && leftHitPlayer != Players.NEUTRAL && leftHitPlayer != currentPos;
 	}
 
 	public static int[] getPossibleMoves(long[] field, Players p) {
@@ -126,7 +133,7 @@ public class SMove {
 		int xNew = (sposition % DIMENSION) + dir[0];
 		int yNew = (sposition / DIMENSION) + dir[1];
 		if (xNew >= 0 && yNew >= 0 && xNew < DIMENSION && yNew < DIMENSION) {
-			return sposition + dir[1] * DIMENSION + dir[0];
+			return yNew * DIMENSION + xNew;
 		} else {
 			return GameFieldUtils.INVALID_POSITION;
 		}
@@ -142,6 +149,28 @@ public class SMove {
 	
 	public static int setHitPlayer(int smove, int pos) {
 		return smove | HIT_MOVE_BIT | (pos  << HIT_MOVE_SHIFT);
+	}
+
+	public static int setMovingPlayer(int move) {
+		// TODO Auto-generated method stub
+		return move;
+	}
+
+	public static int fromObjectMove(long[] field, Move nextMove) {
+		int smove = newSMove(nextMove.fromX, nextMove.fromY, nextMove.toX, nextMove.toY);
+		if (!GameFieldUtils.isEmptyPosition(field, to(smove))) {
+			smove = setHitPlayer(smove, GameFieldUtils.getPlayerNumber(field, to(smove)));
+		}
+		return smove;
+	}
+
+	public static void printMoves(int[] moves) {
+		for (int move = 0; move < moves.length; move++) {
+			if (move == GameFieldUtils.INVALID_POSITION) {
+				break;
+			}
+			System.out.println(toString(move));
+		}
 	}
 
 	// public static int getFromX(int smove){

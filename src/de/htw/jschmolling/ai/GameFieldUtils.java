@@ -212,7 +212,7 @@ public class GameFieldUtils {
 	
 	public static int evalHIT_FIRST(long[] field, Players movingPlayer) {
 		int score = 0;
-		System.out.println("Evalutation for " + movingPlayer);
+//		System.out.println("Evalutation for " + movingPlayer);
 		for (Players p : Players.values()) {
 			int scoreMoves = 0;
 			int [] moves = new int[6 * 3];
@@ -228,7 +228,7 @@ public class GameFieldUtils {
 					}
 				}
 			}
-			System.out.println("\tpossible moves for " + p.toString() + ": " + scoreMoves);
+//			System.out.println("\tpossible moves for " + p.toString() + ": " + scoreMoves);
 			score += scoreMoves * ((movingPlayer == p)?1:-1);
 		}
 		return score;

@@ -28,7 +28,10 @@ public enum Players {
 	EAST(1),
 	SOUTH(2),
 	WEST(3);
+
+	public int[] serverOrder = {2, 1, 0, 3};
 	
+	public static int MAX_ROUNDS = 4 * 6 * 7;
 	public static int NEUTRAL = -1;
 	
 	//       {0,-1}
@@ -78,8 +81,7 @@ public enum Players {
 									   {"←", "_", "→"},
 									   {"↙", "↓", "↘"}};
 	public final int pos;
-
-	
+ 	
 	private Players( int pos){
 		this.pos = pos;
 	}
@@ -106,7 +108,41 @@ public enum Players {
 	}
 
 	public Players next() {
-		return Players.values()[(this.pos + 1) % Players.values().length];
+		switch (pos) {
+		case 2:
+			return EAST;
+		case 1:
+			return NORTH;
+		case 0:
+			return WEST;
+		case 3:
+			return SOUTH;
+
+		default:
+			break;
+		}
+		System.out.println("WARNING: returned default player");
+		return Players.NORTH;
+	}
+
+	public static Players fromServerNumber(int myPlayerNumber) {
+		switch (myPlayerNumber) {
+		case 0:
+			return SOUTH;
+		case 1:
+			return EAST;
+		case 2:
+			return NORTH;
+		case 3:
+			return WEST;
+		}
+		System.out.println("WARNING: returned default player");
+		return Players.NORTH;
+	}
+
+	public static Players getFirst() {
+		// TODO Auto-generated method stub
+		return fromServerNumber(0);
 	}
 
 }
