@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import lenz.htw.kimpl.Move;
 import de.htw.jschmolling.ai.GameFieldUtils.EvalStrategy;
 
 
@@ -66,7 +67,7 @@ public class Search {
 		
 		if (moves[0] == INVALID_POSITION){
 			// RECURSION: player cant move
-			result = -DLS(field, movingPlayer.next(), depth - 1, limit, hash, -beta, -maxAlpha);
+			result = -DLS(field, movingPlayer.next(), depth + 1, limit, hash, -beta, -maxAlpha);
 		} else {
 			int n = getOrderedMoves(o, moves, orderedMoves, hash);
 			for (int i = 0; i < n; i++) {
@@ -127,7 +128,7 @@ public class Search {
 		long before = System.nanoTime();
 		this.stopTime = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeLimit - 20);
 		for (int i = 0; i < limit; i++) {
-			System.out.println("" + i);
+//			System.out.println("" + i);
 			try {
 				moves = new int[6 * 3];
 				positionsBuffer = new int[6];
@@ -195,6 +196,11 @@ public class Search {
 	public int getBestMove(long[] field, Players currentPlayer) {
 		final int hash = Zobrist.hash(field);
 		search(field, currentPlayer, 15, hash);
+		return currentBestMoves[0];
+	}
+
+	public int getBestMove() {
+		// TODO Auto-generated method stub
 		return currentBestMoves[0];
 	}
 
