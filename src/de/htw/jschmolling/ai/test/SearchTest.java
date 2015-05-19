@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 
 import de.htw.jschmolling.ai.GameFieldUtils;
+import de.htw.jschmolling.ai.GameFieldUtils.EvalStrategy;
 import de.htw.jschmolling.ai.Players;
 import de.htw.jschmolling.ai.Search;
 import de.htw.jschmolling.ai.Zobrist;
@@ -16,13 +17,16 @@ public class SearchTest {
 	@Test
 	public void testSimpleSearch() {
 		
+		final Search testSearch = new Search(EvalStrategy.HIT_FIRST);
+		
 		Runnable informer = new Runnable() {
 			
 			@Override
 			public void run() {
-				System.out.println("fieldStates: " + Search.fieldStateCounter);
+				System.out.println("fieldStates: " + testSearch.fieldStateCounter);
 			}
 		};
+		
 		final ScheduledExecutorService scheduler =
 			     Executors.newScheduledThreadPool(1);
 		scheduler.scheduleAtFixedRate(informer, 1, 10, TimeUnit.SECONDS);
@@ -35,10 +39,10 @@ public class SearchTest {
 		String fieldStates = "";
 		for (int i = 0; i < 12; i++) {
 			long start = System.nanoTime();
-			int res = Search.DLS(field, Players.SOUTH, i, 0, Zobrist.hash(field));
+			int res = testSearch.search(field, Players.SOUTH, i, 0, Zobrist.hash(field));
 			long time = System.nanoTime() - start;
 			timings +="" + 1.0 * time / TimeUnit.SECONDS.toNanos(1) + ", ";
-			fieldStates += "" + Search.fieldStateCounter + ", ";
+			fieldStates += "" + testSearch.fieldStateCounter + ", ";
 		}
 		System.out.println(timings);			
 		System.out.println(fieldStates);

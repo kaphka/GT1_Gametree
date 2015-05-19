@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import de.htw.jschmolling.ai.DUtils;
 import de.htw.jschmolling.ai.GameFieldUtils;
+import de.htw.jschmolling.ai.GameFieldUtils.EvalStrategy;
 import de.htw.jschmolling.ai.Players;
 import de.htw.jschmolling.ai.SMove;
 import de.htw.jschmolling.ai.Zobrist;
@@ -213,6 +214,19 @@ public class AIIntegrationTest {
 				assertEquals(p.pos, GameFieldUtils.getPlayerNumber(field, i));
 				GameFieldUtils.unset(field, p.pos, i);
 			}
+		}
+	}
+	
+	@Test
+	public void testScore() throws Exception {
+		long [] field = GameFieldUtils.createInital();
+		int move = SMove.newSMove(1, 0, 0, 1);
+		move = SMove.setHitPlayer(move, Players.WEST);
+		GameFieldUtils.performMove(field, move, Players.SOUTH);
+		System.out.println(GameFieldUtils.toString(field));
+		for (Players p : Players.values()) {
+			int score = GameFieldUtils.eval(EvalStrategy.HIT_FIRST, field, p);
+			System.out.println(p.toString() + " score = " + score);
 		}
 	}
 

@@ -1,16 +1,30 @@
 package de.htw.jschmolling.ai;
 
+import de.htw.jschmolling.ai.GameFieldUtils.EvalStrategy;
+
 
 public class Search {
-	public static long fieldStateCounter = 0;
+	public long fieldStateCounter = 0;
+	public long startNanoSecond = 0;
+	private final EvalStrategy s;
+	private int currentBestMove = GameFieldUtils.INVALID_POSITION;
+	
+	private int [] lookuptable;
+	
+	public Search(EvalStrategy s) {
+		this.s = s;
+//		128mb
+		lookuptable = new int[128 * 1024 * 1024 * 8 / 32];
+	}
 
-	public static int DLS(long[] field, Players movingPlayer, int depth,
+	public int DLS(long[] field, Players movingPlayer, int depth,
 			int limit, int hash) {
 //		System.out.println("\nDepth: " + depth + " " + movingPlayer.toString());
 //		System.out.println(GameFieldUtils.toString(field));
 		int result = 0;
+		int max = Integer.MIN_VALUE;
 		if (depth == limit) {
-			return depth;
+			return GameFieldUtils.eval(s,field, movingPlayer);
 		} else {
 			int [] moves = new int[6 * 3];
 			int [] positionsBuffer = new int[6];
@@ -27,10 +41,22 @@ public class Search {
 					int rehash = Zobrist.rehash(hash, movingPlayer.pos, moves[i]);
 					fieldStateCounter += 1;
 					result = DLS(field, movingPlayer.next(), depth - 1, limit, rehash);
+					if (result > max){
+						currentBestMove = moves[i];
+						result  = max;
+					}
 					GameFieldUtils.performMove(field, SMove.unmove(moves[i]), movingPlayer);
 				}
 			}
 		}
-		return result;
+		return max;
+	}
+
+	public int search(long[] field, Players movingPlayer, int depth, int limit, int hash) {
+		this.startNanoSecond = System.nanoTime();
+		System.out.println();
+		int max =  DLS(field, movingPlayer, depth, limit, hash);
+		System.out.println(SMove.toString(currentBestMove));
+		return max;
 	}
 }
