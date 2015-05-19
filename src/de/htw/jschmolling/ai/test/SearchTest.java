@@ -37,7 +37,7 @@ public class SearchTest {
 
 		String timings = "";
 		String fieldStates = "";
-		for (int limit = 0; limit < 9; limit++) {
+		for (int limit = 0; limit < 40; limit++) {
 			long start = System.nanoTime();
 			int res = testSearch.search(field, Players.SOUTH, limit, Zobrist.hash(field));
 			long time = System.nanoTime() - start;

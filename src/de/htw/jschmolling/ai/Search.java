@@ -1,5 +1,6 @@
 package de.htw.jschmolling.ai;
 
+import static de.htw.jschmolling.ai.GameFieldUtils.*;
 import de.htw.jschmolling.ai.GameFieldUtils.EvalStrategy;
 
 
@@ -16,51 +17,59 @@ public class Search {
 //		128mb
 		lookuptable = new int[128 * 1024 * 1024 * 8 / 32];
 		for (int i = 0; i < currentBestMoves.length; i++) {
-			currentBestMoves[i] = GameFieldUtils.INVALID_POSITION;
+			currentBestMoves[i] = INVALID_POSITION;
 		}
 	}
 
 	public int DLS(long[] field, Players movingPlayer, int depth,
-			int limit, int hash) {
+			int limit, int hash, int alpha, int beta) {
 //		System.out.println("\nDepth: " + depth + " " + movingPlayer.toString());
 //		System.out.println(GameFieldUtils.toString(field));
-		int result = 0;
-		int max = Integer.MIN_VALUE;
 		if (depth == limit) {
 			return GameFieldUtils.eval(s,field, movingPlayer);
+		}  
+
+		int maxAlpha = alpha;
+		int result = 0;
+		int max = Integer.MIN_VALUE;
+		int [] moves = new int[6 * 3];
+		int [] positionsBuffer = new int[6];
+		
+		SMove.getPossibleMoves(field, movingPlayer, positionsBuffer,moves);
+		
+		if (moves[0] == INVALID_POSITION){
+			// RECURSION: player cant move
+			result = -DLS(field, movingPlayer.next(), depth - 1, limit, hash, -beta, -maxAlpha);
 		} else {
-			int [] moves = new int[6 * 3];
-			int [] positionsBuffer = new int[6];
-			SMove.getPossibleMoves(field, movingPlayer, positionsBuffer,moves);
-			if (moves[0] == GameFieldUtils.INVALID_POSITION){
-				// RECURSION: player cant move
-				result = DLS(field, movingPlayer.next(), depth - 1, limit, hash);
-			} else {
-				for (int i = 0; i < moves.length; i++) {
-					if (moves[i] == GameFieldUtils.INVALID_POSITION){
+			for (int i = 0; i < moves.length; i++) {
+				if (moves[i] == INVALID_POSITION){
+					break;
+				}
+				GameFieldUtils.performMove(field, moves[i], movingPlayer);
+				int rehash = Zobrist.rehash(hash, movingPlayer.pos, moves[i]);
+				fieldStateCounter += 1;
+				// RECURSION
+				result = - DLS(field, movingPlayer.next(), depth + 1, limit, rehash, -beta, -maxAlpha);
+				GameFieldUtils.performMove(field, SMove.unmove(moves[i]), movingPlayer);
+				if (result > maxAlpha){
+					maxAlpha  = result;
+					if (maxAlpha >= beta) {
+						// beta cutoff
 						break;
 					}
-					GameFieldUtils.performMove(field, moves[i], movingPlayer);
-					int rehash = Zobrist.rehash(hash, movingPlayer.pos, moves[i]);
-					fieldStateCounter += 1;
-//					RECURSION
-					result = - DLS(field, movingPlayer.next(), depth + 1, limit, rehash);
-					if (result > max){
-						currentBestMoves[depth] = SMove.setMovingPlayer(moves[i]);
-						result  = max;
-					}
-					GameFieldUtils.performMove(field, SMove.unmove(moves[i]), movingPlayer);
+					currentBestMoves[depth] = SMove.setMovingPlayer(moves[i]);
 				}
+				
 			}
-		}
-		return max;
+		 }
+		return maxAlpha;
 	}
 
 	public int search(long[] field, Players movingPlayer, int limit, int hash) {
 		System.out.println("<-- start search for " + movingPlayer + " limit=" + limit);
 		this.startNanoSecond = System.nanoTime();
 		System.out.println();
-		int max =  DLS(field, movingPlayer, 0, limit, hash);
+		int max =  DLS(field, movingPlayer, 0, limit, hash, Integer.MIN_VALUE, Integer.MAX_VALUE);
 		for (int i = 0; i < currentBestMoves.length; i++) {
 			if (currentBestMoves[i] == GameFieldUtils.INVALID_POSITION){
 				break;

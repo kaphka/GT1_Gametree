@@ -79,7 +79,6 @@ public class NClient implements Runnable {
 			}
 			
 			GameFieldUtils.performMove(field, move, currentPlayer);
-//			currentPlayer = currentPlayer.next();
 			++round;
 			nextMove = null;
 		} while (nextMove != null || round < Players.MAX_ROUNDS);
@@ -95,12 +94,10 @@ public class NClient implements Runnable {
 	public static int getFirstMove(long[] field, Players p) {
 		int [] moves = SMove.getPossibleMoves(field, p);
 		System.out.println(GameFieldUtils.toString(field));
-//		SMove.printMoves(moves);
 		return moves[0];
 	}
 
 	public String getName() {
-		// TODO Auto-generated method stub
 		return basicName;
 	}
 }
