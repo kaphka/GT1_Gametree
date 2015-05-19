@@ -80,12 +80,13 @@ public class GameFieldUtils {
 	
 	static public int getPlayerNumber(long[] field, int x, int y){
 		int pos = y * DIMENSION + x;
-		for (Players p : Players.values()) {
-			if (isSet(field[p.pos], pos)){
-				return p.pos;
-			}
-		}
-		return Players.NEUTRAL;
+		return getPlayerNumber(field, pos);
+//		for (Players p : Players.values()) {
+//			if (isSet(field[p.pos], pos)){
+//				return p.pos;
+//			}
+//		}
+//		return Players.NEUTRAL;
 	}
 	
 	public static String toString(long[] fieldState) {

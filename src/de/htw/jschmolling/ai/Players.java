@@ -29,7 +29,7 @@ public enum Players {
 	SOUTH(2),
 	WEST(3);
 	
-	public static int NEUTRAL = 4;
+	public static int NEUTRAL = -1;
 	
 	//       {0,-1}
 	// {-1,0}      {1,0}
