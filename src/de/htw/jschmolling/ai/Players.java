@@ -32,22 +32,37 @@ public enum Players {
 	public static int NEUTRAL = 4;
 	
 	//       {0,-1}
-	// {-1,0}      {1,0}[
+	// {-1,0}      {1,0}
 	//       {0, 1}
-	static public final int[] DIR_MOVE_N = { 0,-1};
-	static public final int[] DIR_MOVE_E = { -1, 0};
-	static public final int[] DIR_MOVE_S = { 0, 1};
-	static public final int[] DIR_MOVE_W = {1, 0};
+	static public final int[] DIR_MOVE_N = {  0, -1};
+	static public final int[] DIR_MOVE_E = { -1,  0};
+	static public final int[] DIR_MOVE_S = {  0,  1};
+	static public final int[] DIR_MOVE_W = {  1,  0};
 	
-	static public final int[] DIR_STARTING_N = { 0,-1};
-	static public final int[] DIR_STARTING_E = { 1, 0};
-	static public final int[] DIR_STARTING_S = { 0, 1};
-	static public final int[] DIR_STARTING_W = {-1, 0};
+
+	static public final int[] DIR_MOVE_N_LEFT = {  1, -1};
+	static public final int[] DIR_MOVE_E_LEFT = { -1, -1};
+	static public final int[] DIR_MOVE_S_LEFT = { -1,  1};
+	static public final int[] DIR_MOVE_W_LEFT = {  1,  1};
 	
-	static public final int[] INIT_POSITION_N = { 0, 1};
-	static public final int[] INIT_POSITION_E = { 1, 0};
-	static public final int[] INIT_POSITION_S = { 0, 1};
-	static public final int[] INIT_POSITION_W = {-1, 0};
+	
+	static public final int[] DIR_MOVE_N_RIGHT = { -1, -1};
+	static public final int[] DIR_MOVE_E_RIGHT = { -1,  1};
+	static public final int[] DIR_MOVE_S_RIGHT = {  1,  1};
+	static public final int[] DIR_MOVE_W_RIGHT = {  1, -1};
+	
+	static public final int[][] left =  {DIR_MOVE_N_LEFT,  DIR_MOVE_E_LEFT,  DIR_MOVE_S_LEFT,  DIR_MOVE_W_LEFT};
+	static public final int[][] right = {DIR_MOVE_N_RIGHT, DIR_MOVE_E_RIGHT, DIR_MOVE_S_RIGHT, DIR_MOVE_W_RIGHT};
+	
+//	static public final int[] DIR_STARTING_N = { 0,-1};
+//	static public final int[] DIR_STARTING_E = { 1, 0};
+//	static public final int[] DIR_STARTING_S = { 0, 1};
+//	static public final int[] DIR_STARTING_W = {-1, 0};
+	
+//	static public final int[] INIT_POSITION_N = { 0, 1};
+//	static public final int[] INIT_POSITION_E = { 1, 0};
+//	static public final int[] INIT_POSITION_S = { 0, 1};
+//	static public final int[] INIT_POSITION_W = {-1, 0};
 	
 	static public final int[] NEUTRAL_DIRECTION = {0,0};
 	

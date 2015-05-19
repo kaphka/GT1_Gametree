@@ -10,7 +10,7 @@ import lenz.htw.kimpl.Move;
  */
 public class GameFieldUtils {
 
-	public static final int EMPTY_POSITION = 0b1000000000000;
+	public static final int INVALID_POSITION = 0b1000000000000;
 	public final static int INT_NUMBER = 4;
 	public final static int NUMBER_OF_TOKENS = 6;
 	public final static int DIMENSION = 8;
@@ -75,11 +75,7 @@ public class GameFieldUtils {
 	}
 	
 	static public boolean isSet(long field, int pos) {
-		if ((field & (1l << pos)) != 0) {
-			return true;
-		}else{
-			return false;
-		}
+		return (field & (1l << pos)) != 0;
 	}
 	
 	static public int getPlayerNumber(long[] field, int x, int y){
@@ -154,16 +150,31 @@ public class GameFieldUtils {
 			temp = temp >> shift;			
 		}
 		for (int c = n; c < buffer.length; c++) {
-			buffer[c] = EMPTY_POSITION;
+			buffer[c] = INVALID_POSITION;
 		}
 		return buffer;
 	}
+	
 	public static boolean isEmptyPosition(long[] field, int sposition) {
 		return !isSet(field[0], sposition) &&
 			   !isSet(field[1], sposition) &&
 			   !isSet(field[2], sposition) &&
 			   !isSet(field[3], sposition);
 	}
+	
+	public static int getPlayerNumber(long[] field, int sposition) {
+		return (int) (
+			   field[0] >> sposition & 0b1 + 
+			   field[1] >> sposition & 0b1 + 
+			   field[2] >> sposition & 0b1 +
+			   field[3] >> sposition & 0b1 - 1);
+//		return !isSet(field[0], sposition) +
+//			   !isSet(field[1], sposition) +
+//			   !isSet(field[2], sposition) +
+//			   !isSet(field[3], sposition);
+	}
+	
+	
 	public static void performMove(long[] field, int smove, Players movingPlayer) {
 		int from = SMove.from(smove);
 		int to   = SMove.to(smove);
@@ -178,6 +189,10 @@ public class GameFieldUtils {
 		field[3] = unset(field[3], to);
 		
 		set(field, movingPlayer.pos, to);
+		
+		if (SMove.isUnMove(smove) && SMove.isHit(smove)){
+			set(field, SMove.getHitPlayer(smove).pos, from);				
+		}
 		
 	}
 

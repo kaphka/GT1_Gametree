@@ -1,6 +1,7 @@
 package de.htw.jschmolling.ai;
 
 import static de.htw.jschmolling.ai.GameFieldUtils.DIMENSION;
+import static de.htw.jschmolling.ai.GameFieldUtils.INVALID_POSITION;
 import lenz.htw.kimpl.Move;
 
 /**
@@ -49,7 +50,7 @@ public class SMove {
 	}
 
 	public static String toString(int smove) {
-		if (to(smove) == GameFieldUtils.EMPTY_POSITION) {
+		if (to(smove) == GameFieldUtils.INVALID_POSITION) {
 			return "invalid";
 		}
 		String s = "";
@@ -62,8 +63,8 @@ public class SMove {
 		return getMoveObject(smove).toString() + s;
 	}
 
-	private static boolean isUnMove(int smove) {
-		return Integer.bitCount(smove & UNMOVE_FLAG) == 1;
+	public static boolean isUnMove(int smove) {
+		return (smove & UNMOVE_FLAG) != 0;
 	}
 
 	public static Players getHitPlayer(int smove) {
@@ -71,28 +72,37 @@ public class SMove {
 	}
 
 	public static boolean isHit(int smove) {
-		return Integer.bitCount(smove & HIT_MOVE_BIT) == 1;
+		return (smove & HIT_MOVE_BIT) != 0;
 	}
 
 	public static void getPossibleMoves(long[] field, Players p,
 			int[] positionsBuffer, int[] resultBuffer) {
-		int[] direction = Players.dir[p.pos];
+		int[] dirMiddle = Players.dir[p.pos];
+		int[] dirLeft = Players.left[p.pos];
+		int[] dirRight = Players.right[p.pos];
+		
 		GameFieldUtils.getPlayerPositions(field[p.pos], positionsBuffer);
 		int cMoves = 0;
+		int middlePos = INVALID_POSITION;
+		int leftPos   = INVALID_POSITION;
+		int rightPos  = INVALID_POSITION;
 		for (int i : positionsBuffer) {
-			if (i == GameFieldUtils.EMPTY_POSITION) {
+			if (i == INVALID_POSITION) {
 				break;
 			}
-			int newPos = add(i, direction[0], direction[1]);
-			// int left = newSMove(i, add(i, direction[0], direction[1]));
-			// int right = newSMove(i, add(i, direction[0], direction[1]));
-			if (newPos != GameFieldUtils.EMPTY_POSITION
-					&& GameFieldUtils.isEmptyPosition(field, newPos)) {
-				resultBuffer[cMoves++] = newSMove(i, newPos );
+			middlePos = add(i, dirMiddle);
+			leftPos   = add(i, dirLeft);
+			rightPos  = add(i, dirLeft);
+			if (middlePos != INVALID_POSITION
+					&& GameFieldUtils.isEmptyPosition(field, middlePos)) {
+				resultBuffer[cMoves++] = newSMove(i, middlePos );
 			}
+//			if (leftPos != INVALID_POSITION && GameFieldUtils.getPlayerNumber(field, x, y)) {
+//				
+//			}
 		}
 		for (int i = cMoves; i < resultBuffer.length; i++) {
-			resultBuffer[i] = GameFieldUtils.EMPTY_POSITION;
+			resultBuffer[i] = INVALID_POSITION;
 		}
 	}
 
@@ -103,13 +113,13 @@ public class SMove {
 		return result;
 	}
 
-	private static int add(int sposition, int x, int y) {
-		int xNew = (sposition % DIMENSION) + x;
-		int yNew = (sposition / DIMENSION) + y;
+	private static int add(int sposition, int [] dir) {
+		int xNew = (sposition % DIMENSION) + dir[0];
+		int yNew = (sposition / DIMENSION) + dir[1];
 		if (xNew >= 0 && yNew >= 0 && xNew < DIMENSION && yNew < DIMENSION) {
-			return sposition + y * DIMENSION + x;
+			return sposition + dir[1] * DIMENSION + dir[0];
 		} else {
-			return GameFieldUtils.EMPTY_POSITION;
+			return GameFieldUtils.INVALID_POSITION;
 		}
 	}
 

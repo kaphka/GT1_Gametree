@@ -12,7 +12,7 @@ import de.htw.jschmolling.ai.DUtils;
 import de.htw.jschmolling.ai.GameFieldUtils;
 import de.htw.jschmolling.ai.Players;
 import de.htw.jschmolling.ai.SMove;
-import de.htw.jschmolling.performance.Zobrist;
+import de.htw.jschmolling.ai.Zobrist;
 
 /**
  * General purpose tests.
@@ -84,17 +84,17 @@ public class AIIntegrationTest {
 	
 	@Test
 	public void testGetPlayerPositions() throws Exception {
-		int [] playerPositions = { 0, 2, 5, 7, 63, GameFieldUtils.EMPTY_POSITION };
+		int [] playerPositions = { 0, 2, 5, 7, 63, GameFieldUtils.INVALID_POSITION };
 		long [] pfield = GameFieldUtils.getEmptyField();
 		for (int i = 0; i < playerPositions.length - 1; i++) {
 			GameFieldUtils.set(pfield, Players.SOUTH.pos, playerPositions[i]);
 		}
 		
-		System.out.println(DUtils.getFullLong(pfield[Players.SOUTH.pos]));
+//		System.out.println(DUtils.getFullLong(pfield[Players.SOUTH.pos]));
 		
 		int [] playerPositionsResults = new int[playerPositions.length];
 		GameFieldUtils.getPlayerPositions(pfield[Players.SOUTH.pos], playerPositionsResults);
-		System.out.println(Arrays.toString(playerPositionsResults));
+//		System.out.println(Arrays.toString(playerPositionsResults));
 		for (int i = 0; i < playerPositionsResults.length; i++) {
 			assertArrayEquals(playerPositions, playerPositionsResults);
 		}
@@ -115,7 +115,7 @@ public class AIIntegrationTest {
 		GameFieldUtils.set(s, 2, 2);
 		GameFieldUtils.set(s, 2, 3);
 		GameFieldUtils.set(s, 3, 1, 1);
-		System.out.println(GameFieldUtils.toString(s));
+//		System.out.println(GameFieldUtils.toString(s));
 		
 		int [] moves = SMove.getPossibleMoves(s, Players.WEST);
 		for (int i : moves) {
@@ -136,7 +136,7 @@ public class AIIntegrationTest {
 		GameFieldUtils.set(field, Players.NORTH.pos, 0);
 		int smove = SMove.newSMove(0, 1);
 		GameFieldUtils.performMove(field, smove, Players.NORTH);
-		System.out.println(GameFieldUtils.toString(field));
+//		System.out.println(GameFieldUtils.toString(field));
 	}
 	
 	@Test
@@ -150,19 +150,46 @@ public class AIIntegrationTest {
 	@Test
 	public void testStartingPositions() throws Exception {
 		long [] field = GameFieldUtils.createInital();
-		System.out.println(GameFieldUtils.toString(field));
+		int count = 0;
+		for (int i = 0; i < field.length; i++) {
+			count += Long.bitCount(field[i]);
+		}
+		assertEquals(4 * 6, count);
+//		System.out.println(GameFieldUtils.toString(field));
 	}
 	
 	@Test
 	public void testHitMove() throws Exception {
-		long [] field = GameFieldUtils.createInital();
-		int hash = Zobrist.hash(field);
 		int move = SMove.newSMove(2, 8);
 		move = SMove.setHitPlayer(move, Players.WEST);
 		int unmove = SMove.unmove(move);
+
+		long [] field = GameFieldUtils.createInital();
+		int hashStartingField = Zobrist.hash(field);
+	
+		
+		GameFieldUtils.performMove(field, move, Players.SOUTH);
+		int hashMoved = Zobrist.hash(field);
+		int rehashMoved    = Zobrist.rehash(hashStartingField, Players.SOUTH.pos, move);
+
+		int [] buffer = new int[6];
+		for (Players p : Players.values()) {
+			System.out.println(Arrays.toString(GameFieldUtils.getPlayerPositions(field[p.pos], buffer)));
+		}
+		
+		GameFieldUtils.performMove(field, unmove, Players.SOUTH);
+		int hashField = Zobrist.hash(field);
+		
+		System.out.println(GameFieldUtils.toString(field));
+		
 		System.out.println(SMove.toString(move));
 		System.out.println(SMove.toString(unmove));
-		int rehash = Zobrist.rehash(hash, Players.SOUTH.pos, move);
+		
+		int rehashOriginal = Zobrist.rehash(rehashMoved, Players.SOUTH.pos, unmove);
+		assertEquals(hashStartingField, hashField);
+		assertEquals(hashStartingField, rehashOriginal);
+		assertEquals(hashMoved, rehashMoved);
+		
 	}
 
 }

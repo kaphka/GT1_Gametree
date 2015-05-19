@@ -9,7 +9,7 @@ import org.junit.Test;
 import de.htw.jschmolling.ai.GameFieldUtils;
 import de.htw.jschmolling.ai.Players;
 import de.htw.jschmolling.ai.Search;
-import de.htw.jschmolling.performance.Zobrist;
+import de.htw.jschmolling.ai.Zobrist;
 
 public class SearchTest {
 
@@ -31,9 +31,19 @@ public class SearchTest {
 		GameFieldUtils.set(field, Players.SOUTH.pos, 2);
 		GameFieldUtils.set(field, Players.NORTH.pos, 57);
 
-		int res = Search.DLS(field, Players.SOUTH, 4 * 4, 0, Zobrist.hash(field));
+		String timings = "";
+		String fieldStates = "";
+		for (int i = 0; i < 12; i++) {
+			long start = System.nanoTime();
+			int res = Search.DLS(field, Players.SOUTH, i, 0, Zobrist.hash(field));
+			long time = System.nanoTime() - start;
+			timings +="" + 1.0 * time / TimeUnit.SECONDS.toNanos(1) + ", ";
+			fieldStates += "" + Search.fieldStateCounter + ", ";
+		}
+		System.out.println(timings);			
+		System.out.println(fieldStates);
+		
 		System.out.println(GameFieldUtils.toString(field));
-		System.out.println(res);
 	}
 
 }

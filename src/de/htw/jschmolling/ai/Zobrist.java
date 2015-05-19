@@ -1,10 +1,6 @@
-package de.htw.jschmolling.performance;
+package de.htw.jschmolling.ai;
 
 import java.util.Random;
-
-import de.htw.jschmolling.ai.GameFieldUtils;
-import de.htw.jschmolling.ai.Players;
-import de.htw.jschmolling.ai.SMove;
 
 /**
  * Provides Zobrist hash methods
@@ -32,7 +28,7 @@ public class Zobrist {
 		for (Players p : Players.values()) {
 			GameFieldUtils.getPlayerPositions(field[p.pos], buffer);
 			for (int i = 0; i < buffer.length; i++) {
-				if (buffer[i] == GameFieldUtils.EMPTY_POSITION){
+				if (buffer[i] == GameFieldUtils.INVALID_POSITION){
 					break;
 				}
 				hash ^= zobristTable[p.pos][buffer[i]];
@@ -42,7 +38,15 @@ public class Zobrist {
 	}
 	
 	public static int rehash(int hash, int playerPos, int smove) {
-		return (hash ^ zobristTable[playerPos][SMove.from(smove)]) ^ zobristTable[playerPos][SMove.to(smove)];
+		int rehash = hash;
+		if (SMove.isHit(smove)){
+			if(SMove.isUnMove(smove)){
+				rehash ^= zobristTable[SMove.getHitPlayer(smove).pos][SMove.from(smove)];				
+			} else {
+				rehash ^= zobristTable[SMove.getHitPlayer(smove).pos][SMove.to(smove)];
+			}
+		}
+		return (rehash ^ zobristTable[playerPos][SMove.from(smove)]) ^ zobristTable[playerPos][SMove.to(smove)];
 	}
 	
 	public static String print(int h) {
