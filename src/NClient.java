@@ -62,9 +62,7 @@ public class NClient implements Runnable {
 		int round = 0;
 		
 		do {
-//			if(basicName == "none"){
-//				break;
-//			}
+//			
 			
 			nextMove = nc.receiveMove();
 			if (nextMove != null){
@@ -76,6 +74,9 @@ public class NClient implements Runnable {
 				searcher.setTimeLimit(msTimeLimit);
 				
 				move = searcher.getBestMove(field, currentPlayer);
+				if(basicName == "none"){
+					move = getFirstMove(field, currentPlayer);
+				}
 				
 				System.out.println(name + "-----new move-----");
 //				System.out.println(GameFieldUtils.toString(field));

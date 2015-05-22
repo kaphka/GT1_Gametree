@@ -27,9 +27,9 @@ public class TestClient {
 		long [] field = GameFieldUtils.createInital();
 
 		NClient n0 = new NClient("127.0.0.1", "jakob0", image);
-		NClient n1 = new NClient("127.0.0.1", "jakob1", image);
-		NClient n2 = new NClient("127.0.0.1", "jakob2", image);
-		NClient n3 = new NClient("127.0.0.1", "jakob3", image);
+		NClient n1 = new NClient("127.0.0.1", "none", image);
+		NClient n2 = new NClient("127.0.0.1", "none", image);
+		NClient n3 = new NClient("127.0.0.1", "none", image);
 		
 		NClient[] clients = {n0,n1,n2,n3};
 		

@@ -18,7 +18,7 @@ public class Search {
 	private final EvalStrategy s;
 	private int[] currentBestMoves       = new int [4 * 6 * 7];
 	private int[] currentBestMovesScores = new int [4 * 6 * 7];
-	private int [] lookuptable;
+	private long [] lookuptable;
 	private OrderStrategy o;
 //	private List<Run>
 	
@@ -37,7 +37,7 @@ public class Search {
 		this.s = s;
 		this.o = o;
 //		128mb
-		lookuptable = new int[128 * 1024 * 1024 * 8 / 32];
+		lookuptable = new long[128 * 1024 * 1024 * 8 / 64];
 		for (int i = 0; i < currentBestMoves.length; i++) {
 			currentBestMoves[i] = INVALID_POSITION;
 		}
@@ -126,7 +126,7 @@ public class Search {
 	public int search(long[] field, Players movingPlayer, int limit, int hash) {
 		System.out.println("<-- start search for " + movingPlayer + " limit=" + limit);
 		long before = System.nanoTime();
-		this.stopTime = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeLimit - 20);
+		this.stopTime = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeLimit - 10);
 		for (int i = 0; i < limit; i++) {
 //			System.out.println("" + i);
 			try {

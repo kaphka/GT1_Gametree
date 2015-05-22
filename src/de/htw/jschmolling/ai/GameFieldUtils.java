@@ -70,8 +70,6 @@ public class GameFieldUtils {
 		return field & ~(1l << pos);
 	}
 	
-	
-	
 	static public boolean isSet(long[] field, int pos, int x, int y) {
 		return isSet(field[pos], y * DIMENSION + x);
 	}
@@ -147,8 +145,6 @@ public class GameFieldUtils {
 		for (int c = 0; c < n; c++) {
 			shift = Long.numberOfTrailingZeros(temp) + 1;
 			i += shift;
-//			System.out.println(DUtils.getFullLong(temp) + " i = " + i + " shift = " + shift);
-			// example: Long.numberOfTrailingZeros(0x100) -> 2
 			buffer[c] = i;
 			temp = temp >> shift;			
 		}
